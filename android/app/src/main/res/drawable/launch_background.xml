@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Modify this file to customize your launch splash screen -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/holo_blue_light" />
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <item>
+        <bitmap
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:src="@drawable/logo1024"
+            android:layout_height="wrap_content" />
+    </item>
+    <!-- You can insert your own image assets here -->
+<!--    <item>-->
+<!--        <bitmap-->
+<!--            android:gravity="center"-->
+<!--            android:src="@mipmap/ic_launcher" />-->
+<!--    </item>-->
+</layer-list>
