@@ -1,10 +1,7 @@
 import 'package:timetable/main.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:timetable/templates/bubbles.dart';
 import 'dart:convert';
-
-import '../../templates/text_decoration.dart';
 
 class Teachers extends StatefulWidget {
   @override
@@ -21,9 +18,9 @@ class _TeachersState extends State<Teachers> {
 
   Future<String> getData() async {
     var response = await http.get(
-        Uri.encodeFull(
+        Uri.tryParse(
             API_key + "teachers"),
-        headers: {"Content-Type": 'application/json; charset=utf-8'});
+        headers: {});
     setState(() {
       data = json.decode(response.body);
       data.sort((a, b) => a.compareTo(b));
@@ -35,7 +32,6 @@ class _TeachersState extends State<Teachers> {
     if (data == null || data.length < 1) {
       return Stack(
         children: [
-          Bubbles(),
           Center(child: Text("Пожалуйста подождите...", style: TextStyle(color: Colors.black, fontSize: 20),),
           ),
         ],
@@ -77,15 +73,27 @@ class _TeachersState extends State<Teachers> {
   @override
   void dispose() {
     super.dispose();
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: DecoratedText("Преподаватели"),
+        toolbarHeight: MediaQuery.of(context).size.shortestSide * 0.11 < 55
+            ? 55
+            : MediaQuery.of(context).size.shortestSide * 0.11 > 85
+            ? 85
+            : MediaQuery.of(context).size.shortestSide * 0.11,
+        title: Text(
+          "Преподаватели",
+          style: TextStyle(
+            fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: deepBlue,
-        centerTitle: false,
+        centerTitle: true,
       ),
       body: Column(
         children: [

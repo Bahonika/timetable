@@ -135,15 +135,15 @@ class DropDownField extends FormField<String> {
               ? Container()
               : Container(
             alignment: Alignment.topCenter,
-            height: itemsVisibleInDropdown *
-                48.0, //limit to default 3 items in dropdownlist view and then remaining scrolls
+            height: items != null  ? 2 *
+                48.0 : 0.0, //limit to default 3 items in dropdownlist view and then remaining scrolls
             width: MediaQuery.of(field.context).size.width,
             child: ListView(
               cacheExtent: 0.0,
               scrollDirection: Axis.vertical,
               controller: _scrollController,
               padding: EdgeInsets.only(left: 40.0),
-              children: items.isNotEmpty
+              children: items != null
                   ? ListTile.divideTiles(
                   context: field.context,
                   tiles: state._getChildren(state._items))

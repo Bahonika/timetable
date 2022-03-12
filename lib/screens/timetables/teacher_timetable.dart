@@ -1,4 +1,5 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'dart:async';
+import 'package:timetable/for_timetables.dart';
 import 'package:timetable/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -6,8 +7,6 @@ import 'package:date_format/date_format.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
-
-import '../../for_timetables.dart';
 
 class TeacherTimetable extends StatefulWidget {
   @override
@@ -27,11 +26,6 @@ class _TeacherTimetableState extends State<TeacherTimetable>
 
   String waiter = "Пожалуйста подождите...";
 
-  changeWaiter() {
-    Future.delayed(Duration(seconds: 4), () {
-        waiter = "Проверьте соединение с интернетом";
-    });
-  }
   //Инициализация экрана
   @override
   void initState() {
@@ -40,10 +34,6 @@ class _TeacherTimetableState extends State<TeacherTimetable>
     now = DateTime.now();
     urlCreate();
     getData();
-    print("y");
-    setState(() {
-      changeWaiter();
-    });
   }
 
   @override
@@ -80,6 +70,7 @@ class _TeacherTimetableState extends State<TeacherTimetable>
         }
       }
     });
+
     return "Success";
   }
 
@@ -218,26 +209,59 @@ class _TeacherTimetableState extends State<TeacherTimetable>
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: teacherName == null
-              ? RotateAnimatedTextKit(
-                  repeatForever: true,
-                  alignment: Alignment.centerLeft,
-                  text: ["Расписание ", "преподавателей"],
-                  textStyle: TextStyle(
-                    fontSize: width / 16.6,
-                  ),
-                )
-              : RotateAnimatedTextKit(
-                  alignment: Alignment.centerLeft,
-                  repeatForever: true,
-                  text: ["Расписание ", teacherName],
-                  textStyle: TextStyle(
-                    fontSize: width / 16.6,
-                  ),
-                  textAlign: TextAlign.start),
+          toolbarHeight: MediaQuery.of(context).size.shortestSide * 0.11 < 55
+              ? 55
+              : MediaQuery.of(context).size.shortestSide * 0.11 > 85
+                  ? 85
+                  : MediaQuery.of(context).size.shortestSide * 0.11,
+          title: Text(
+            teacherName == null ? "Расписание" : teacherName,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           backgroundColor: deepBlue,
-          actions: [],
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () {
+                showDatePicker(
+                        context: context,
+                        initialDate: now,
+                        firstDate: DateTime(2010),
+                        lastDate: DateTime(2100))
+                    .then((date) {
+                  if (date != null) {
+                    setState(() {
+                      now = date;
+                      urlCreate();
+                      getData();
+                    });
+                  }
+                });
+              },
+            )
+          ],
         ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            FloatingActionButton(onPressed: () => prevDay(),
+              child: Icon(Icons.arrow_back_rounded),
+              backgroundColor: lightBlue,
+              heroTag: "back_button",
+            ),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.1,),
+            FloatingActionButton(
+              onPressed: () => nextDay(),
+              child: Icon(Icons.arrow_forward_rounded),
+              backgroundColor: lightBlue,
+              heroTag: "forward_button",
+            ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: BottomAppBar(
             color: deepBlue,
             child: Row(
@@ -245,11 +269,29 @@ class _TeacherTimetableState extends State<TeacherTimetable>
               children: [
                 Text(
                   formatNow,
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide *
+                      0.06 >
+                      40
+                      ? 40
+                      : MediaQuery.of(context).size.shortestSide * 0.06 < 14
+                      ? 14
+                      : MediaQuery.of(context).size.shortestSide * 0.06, color: Colors.white),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05 < 40
+                      ? 40
+                      : MediaQuery.of(context).size.height * 0.05,
+                  width: 0,
                 ),
                 Text(
                   rusWeekDay(weekDay),
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide *
+                      0.06 >
+                      40
+                      ? 40
+                      : MediaQuery.of(context).size.shortestSide * 0.06 < 14
+                      ? 14
+                      : MediaQuery.of(context).size.shortestSide * 0.06, color: Colors.white),
                 )
               ],
             )),

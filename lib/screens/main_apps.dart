@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///E:/Flutter/Projects/timetable/lib/templates/timetable_button.dart';
+import 'package:timetable/screens/timetables/course_timetable.dart';
+import '../main.dart';
 import 'main_menu.dart';
 
 class MainApps extends StatefulWidget {
@@ -8,7 +10,6 @@ class MainApps extends StatefulWidget {
 }
 
 class _MainAppsState extends State<MainApps> {
-
   @override
   void initState() {
     super.initState();
@@ -21,15 +22,41 @@ class _MainAppsState extends State<MainApps> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      SizedBox(
-        height: MediaQuery.of(context).size.height * 0.13,
-      ),
-      TimetableButton(),
-      SizedBox(
-        height: MediaQuery.of(context).size.height * 0.13,
-      ),
-      MainMenu(),
-    ]);
+    return Container(
+      child: Column(children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.13,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.94,
+          height: MediaQuery.of(context).size.height * 0.08,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: deepBlue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Timetable()),
+              );
+            },
+            child: Text(
+              "Расписание",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: MediaQuery.of(context).size.height * 0.045,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.13,
+        ),
+        MainMenu(),
+      ]),
+    );
   }
 }

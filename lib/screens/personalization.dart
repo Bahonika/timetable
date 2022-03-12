@@ -5,7 +5,6 @@ import 'file:///E:/Flutter/Projects/timetable/lib/templates/dropdown.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 import '../main.dart';
 
 import 'package:http/http.dart' as http;
@@ -30,9 +29,6 @@ class _PersonalizationState extends State<Personalization>
   TextEditingController teachersController = TextEditingController();
   TextEditingController placesController = TextEditingController();
 
-  Animation<double> animation;
-  AnimationController controller;
-
   @override
   void initState() {
     super.initState();
@@ -44,13 +40,11 @@ class _PersonalizationState extends State<Personalization>
 
   @override
   void dispose() {
-    super.dispose();
-  }
+    groupsController.dispose();
+    teachersController.dispose();
+    placesController.dispose();
 
-  //Конвертация
-  static String utf8convert(String text) {
-    List<int> bytes = text.toString().codeUnits;
-    return utf8.decode(bytes);
+    super.dispose();
   }
 
   /////////////////
@@ -271,17 +265,13 @@ class _PersonalizationState extends State<Personalization>
 
   @override
   Widget build(BuildContext context) {
-
-
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
           child: Column(
             children: [
               Divider(),
-
               /////////Ввод курса//////////
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -310,7 +300,6 @@ class _PersonalizationState extends State<Personalization>
               Divider(),
 
               /////////Ввод преподавателя//////////
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -337,7 +326,6 @@ class _PersonalizationState extends State<Personalization>
               Divider(),
 
               ////////Кабинет//////////
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -361,19 +349,29 @@ class _PersonalizationState extends State<Personalization>
                 onEditingComplete: ButtonSave,
                 enabled: true,
               ),
+              SizedBox(
+                height: 30,
+              ),
 
               ///////Кнопка сохранения///////
               ElevatedButton(
                 onPressed: () {
                   ButtonSave();
                 },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                    return deepBlue;
-                  }),
+                style: ElevatedButton.styleFrom(
+                    primary: deepBlue,
+                    minimumSize: Size(MediaQuery.of(context).size.width * 0.5,
+                        MediaQuery.of(context).size.height * 0.07),
+                    maximumSize: Size(MediaQuery.of(context).size.width * 0.6,
+                        MediaQuery.of(context).size.height * 0.08)),
+                child: Text(
+                  "Сохранить изменения",
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.02),
                 ),
-                child: Text("Сохранить изменения"),
+              ),
+              SizedBox(
+                height: 30,
               ),
             ],
           ),

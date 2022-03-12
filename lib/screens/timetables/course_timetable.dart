@@ -1,21 +1,19 @@
-import 'dart:convert';
-
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:date_format/date_format.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
+import 'dart:async';
+import 'package:timetable/for_timetables.dart';
 import 'package:timetable/main.dart';
-import '../../for_timetables.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
+
+import 'package:flutter/material.dart';
 
 class Timetable extends StatefulWidget {
   @override
   _TimetableState createState() => _TimetableState();
 }
 
-class _TimetableState extends State<Timetable>
-    with ForTimetablesMixin, SingleTickerProviderStateMixin {
+class _TimetableState extends State<Timetable> with ForTimetablesMixin {
   List data;
   String url;
 
@@ -27,12 +25,6 @@ class _TimetableState extends State<Timetable>
 
   String waiter = "Пожалуйста подождите...";
 
-  changeWaiter() {
-    Future.delayed(Duration(seconds: 4), () {
-      waiter = "Проверьте соединение с интернетом";
-    });
-  }
-
   //Инициализация экрана
   @override
   void initState() {
@@ -43,9 +35,8 @@ class _TimetableState extends State<Timetable>
     getData();
 
     setState(() {
-      changeWaiter();
+      getData();
     });
-    print("sss");
   }
 
   @override
@@ -89,7 +80,6 @@ class _TimetableState extends State<Timetable>
       urlCreate();
       getData();
     });
-
   }
 
   //Получение списка занятий
@@ -121,7 +111,7 @@ class _TimetableState extends State<Timetable>
         child: Container(
           child: Center(
               child: Text(
-            "Неверно введен курс",
+            "Неверно введен курс в настройках",
             style: TextStyle(fontSize: 35),
           )),
         ),
@@ -183,8 +173,6 @@ class _TimetableState extends State<Timetable>
     );
   }
 
-  TextEditingController groupsController = TextEditingController();
-
   //Основной экран расписания
   @override
   Widget build(BuildContext context) {
@@ -199,18 +187,62 @@ class _TimetableState extends State<Timetable>
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: RotateAnimatedTextKit(
-            repeatForever: true,
-            alignment: Alignment.centerLeft,
-            text: groupName == null
-                ? ["Расписание ", "курса"]
-                : [groupName, "Расписание"],
-            textStyle: TextStyle(
-              fontSize: width / 16.6,
+          toolbarHeight: MediaQuery.of(context).size.shortestSide * 0.11 < 55
+              ? 55
+              : MediaQuery.of(context).size.shortestSide * 0.11 > 85
+                  ? 85
+                  : MediaQuery.of(context).size.shortestSide * 0.11,
+          title: Text(
+            groupName == null ? "Расписание" : groupName,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
+              fontWeight: FontWeight.w600,
             ),
           ),
           backgroundColor: deepBlue,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () {
+                showDatePicker(
+                        context: context,
+                        initialDate: now,
+                        firstDate: DateTime(2010),
+                        lastDate: DateTime(2100))
+                    .then((date) {
+                  if (date != null) {
+                    setState(() {
+                      now = date;
+                      urlCreate();
+                      getData();
+                    });
+                  }
+                });
+              },
+            )
+          ],
         ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            FloatingActionButton(
+              onPressed: () => prevDay(),
+              child: Icon(Icons.arrow_back_rounded),
+              backgroundColor: lightBlue,
+              heroTag: "back_button",
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.1,
+            ),
+            FloatingActionButton(
+              onPressed: () => nextDay(),
+              child: Icon(Icons.arrow_forward_rounded),
+              backgroundColor: lightBlue,
+              heroTag: "forward_button",
+            ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: BottomAppBar(
             color: deepBlue,
             child: Row(
@@ -218,11 +250,35 @@ class _TimetableState extends State<Timetable>
               children: [
                 Text(
                   formatNow,
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.shortestSide *
+                          0.06 >
+                          40
+                          ? 40
+                          : MediaQuery.of(context).size.shortestSide * 0.06 < 14
+                          ? 14
+                          : MediaQuery.of(context).size.shortestSide * 0.06,
+                      color: Colors.white),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.shortestSide * 0.05 < 40
+                      ? 40
+                      : MediaQuery.of(context).size.shortestSide * 0.05 > 65
+                          ? 65
+                          : MediaQuery.of(context).size.shortestSide * 0.05,
+                  width: 0,
                 ),
                 Text(
                   rusWeekDay(weekDay),
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.shortestSide *
+                                  0.06 >
+                              40
+                          ? 40
+                          : MediaQuery.of(context).size.shortestSide * 0.06 < 14
+                              ? 14
+                              : MediaQuery.of(context).size.shortestSide * 0.06,
+                      color: Colors.white),
                 )
               ],
             )),
@@ -230,8 +286,11 @@ class _TimetableState extends State<Timetable>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Divider(),
-            Expanded(
-                child: getList()),
+            Expanded(child: getList()),
+            Divider(),
+            ListTile(
+              title: Text(" "),
+            ),
             Divider(),
           ],
         ),

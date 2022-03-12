@@ -1,4 +1,3 @@
-import 'package:timetable/main.dart';
 import 'package:flutter/material.dart';
 
 class DecoratedText extends Text {
@@ -10,7 +9,7 @@ class DecoratedText extends Text {
       data,
       style: TextStyle(
         fontWeight: FontWeight.bold,
-        fontSize: width/16.6,
+        fontSize: 30
       ),
     );
   }

@@ -10,29 +10,33 @@ class LowerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      width: MediaQuery.of(context).size.width * 0.47,
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.46,
       height: MediaQuery.of(context).size.height * 0.14,
-      child: RaisedButton(
-        splashColor: lightBlue,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: deepBlue,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+
+        ),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => widget),
           );
         },
-        color: deepBlue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            text,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: MediaQuery.of(context).size.width * 0.04),
-          ),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.shortestSide * 0.035 > 40
+                  ? 40
+                  : MediaQuery.of(context).size.shortestSide * 0.035 < 15
+                      ? 15
+                      : MediaQuery.of(context).size.shortestSide * 0.035),
         ),
       ),
     );

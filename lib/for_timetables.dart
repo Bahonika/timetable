@@ -1,12 +1,5 @@
-import 'dart:convert';
 
 class ForTimetablesMixin {
-
-  //Translate
-  String utf8convert(String text) {
-    List<int> bytes = text.toString().codeUnits;
-    return utf8.decode(bytes);
-  }
 
 //english weekday to russian
   String rusWeekDay(String weekDay) {

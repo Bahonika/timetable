@@ -9,25 +9,32 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+
             ////////////////////////////Левая верхная кнопка////////////////
-            LowerButton(PlaceTimetable(), "Расписание по кабинету"),
+            LowerButton(PlaceTimetable(), "По кабинету"),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+
             ///////////////////////////Правая верхная кнопка////////////////
-            LowerButton(TeacherTimetable(), "Расписание по преподавателю"),
+            LowerButton(TeacherTimetable(), "По преподавателю"),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
           ],
         ),
         SizedBox(height: MediaQuery.of(context).size.width * 0.02),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+
             ////////////////////////////Левая нижняя кнопка////////////////
             LowerButton(Teachers(), "Список преподавателей"),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+
             ////////////////////////////Правая нижняя кнопка////////////////
             LowerButton(Map(), "Карты корпусов"),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.03),
           ],
         ),
       ],

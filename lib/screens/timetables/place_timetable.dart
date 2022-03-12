@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:timetable/for_timetables.dart';
 import 'package:timetable/main.dart';
 import 'package:http/http.dart' as http;
@@ -20,8 +18,6 @@ class _PlaceTimetableState extends State<PlaceTimetable>
   List data;
   String url;
 
-  // String waiter = "Пожалуйста подождите...";
-
   static DateTime now = DateTime.now();
 
   static String formatNow = formatDate(now, [dd, '-', mm, '-', yyyy]);
@@ -29,12 +25,6 @@ class _PlaceTimetableState extends State<PlaceTimetable>
   static String weekDay = DateFormat('EEEE').format(now);
 
   String waiter = "Пожалуйста подождите...";
-
-  changeWaiter() {
-    Future.delayed(Duration(seconds: 4), () {
-        waiter = "Проверьте соединение с интернетом";
-    });
-  }
 
   //Инициализация экрана
   @override
@@ -44,9 +34,6 @@ class _PlaceTimetableState extends State<PlaceTimetable>
     now = DateTime.now();
     urlCreate();
     getData();
-    setState(() {
-      changeWaiter();
-    });
   }
 
   @override
@@ -101,7 +88,6 @@ class _PlaceTimetableState extends State<PlaceTimetable>
       urlCreate();
       getData();
     });
-    getData();
   }
 
   //Получение списка занятий
@@ -225,25 +211,62 @@ class _PlaceTimetableState extends State<PlaceTimetable>
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: placeName == null
-              ? RotateAnimatedTextKit(
-                  repeatForever: true,
-                  alignment: Alignment.centerLeft,
-                  text: ["Расписание ", "кабинета"],
-                  textStyle: TextStyle(
-                    fontSize: width / 16.6,
-                  ),
-                )
-              : RotateAnimatedTextKit(
-                  alignment: Alignment.centerLeft,
-                  repeatForever: true,
-                  text: ["Расписание ", placeName],
-                  textStyle: TextStyle(
-                    fontSize: width / 16.6,
-                  ),
-                  textAlign: TextAlign.start),
+          toolbarHeight: MediaQuery.of(context).size.shortestSide * 0.11 < 55
+              ? 55
+              : MediaQuery.of(context).size.shortestSide * 0.11 > 85
+                  ? 85
+                  : MediaQuery.of(context).size.shortestSide * 0.11,
+          title: Text(
+            placeName == null ? "Расписание" : placeName,
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.shortestSide * 0.06,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           backgroundColor: deepBlue,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () {
+                showDatePicker(
+                        context: context,
+                        initialDate: now,
+                        firstDate: DateTime(2010),
+                        lastDate: DateTime(2222))
+                    .then((date) {
+                  if (date != null) {
+                    setState(() {
+                      now = date;
+                      urlCreate();
+                      getData();
+                    });
+                  }
+                });
+              },
+            )
+          ],
         ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            FloatingActionButton(
+              onPressed: () => prevDay(),
+              child: Icon(Icons.arrow_back_rounded),
+              backgroundColor: lightBlue,
+              heroTag: "back_button",
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.1,
+            ),
+            FloatingActionButton(
+              onPressed: () => nextDay(),
+              child: Icon(Icons.arrow_forward_rounded),
+              backgroundColor: lightBlue,
+              heroTag: "forward_button",
+            ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         bottomNavigationBar: BottomAppBar(
             color: deepBlue,
             child: Row(
@@ -251,11 +274,31 @@ class _PlaceTimetableState extends State<PlaceTimetable>
               children: [
                 Text(
                   formatNow,
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide *
+                      0.06 >
+                      40
+                      ? 40
+                      : MediaQuery.of(context).size.shortestSide * 0.06 < 14
+                      ? 14
+                      : MediaQuery.of(context).size.shortestSide * 0.06, color: Colors.white),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.shortestSide * 0.05 < 40
+                      ? 40
+                      : MediaQuery.of(context).size.shortestSide * 0.05 > 75
+                          ? 75
+                          : MediaQuery.of(context).size.shortestSide * 0.05,
+                  width: 0,
                 ),
                 Text(
                   rusWeekDay(weekDay),
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  style: TextStyle(fontSize: MediaQuery.of(context).size.shortestSide *
+                      0.06 >
+                      40
+                      ? 40
+                      : MediaQuery.of(context).size.shortestSide * 0.06 < 14
+                      ? 14
+                      : MediaQuery.of(context).size.shortestSide * 0.06, color: Colors.white),
                 )
               ],
             )),
@@ -266,6 +309,7 @@ class _PlaceTimetableState extends State<PlaceTimetable>
             Expanded(
               child: getList(),
             ),
+            SizedBox(height: 50,),
             Divider(),
           ],
         ),
