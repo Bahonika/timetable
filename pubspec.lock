@@ -204,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  dev:
+    dependency: "direct main"
+    description:
+      name: dev
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -252,6 +259,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed:
+    dependency: "direct dev"
+    description:
+      name: freezed
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
+  freezed_annotation:
+    dependency: "direct dev"
+    description:
+      name: freezed_annotation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -259,6 +280,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  gestures:
+    dependency: transitive
+    description:
+      name: gestures
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   glob:
     dependency: transitive
     description:
@@ -322,6 +350,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.7.0"
+  json_serializable:
+    dependency: "direct main"
+    description:
+      name: json_serializable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.5.3"
   logging:
     dependency: transitive
     description:
@@ -573,14 +608,14 @@ packages:
     source: hosted
     version: "0.4.12"
   theme_tailor:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: theme_tailor
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6"
   theme_tailor_annotation:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: theme_tailor_annotation
       url: "https://pub.dartlang.org"
