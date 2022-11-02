@@ -26,8 +26,8 @@ class _$CustomTypography {
     TextStyle(
       fontSize: 24,
       height: 28 / 24,
-      fontWeight: FontWeight.w500,
-      color: AppColors.black,
+      fontWeight: FontWeight.w400,
+      color: AppColors.green,
     )
   ];
   static List<TextStyle> body1 = [
