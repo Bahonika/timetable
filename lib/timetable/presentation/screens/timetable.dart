@@ -57,15 +57,10 @@ class TimetableScreen extends StatelessWidget {
                 ListView.separated(
                   shrinkWrap: true,
                   itemCount: 7,
-                  itemBuilder: (
-                    BuildContext context,
-                    int index,
-                  ) {
-                    return Container(
-                      height: 70,
-                      color: context.colors.red,
-                    ); // todo заменить на компонент
-                  },
+                  itemBuilder: (BuildContext context, int index) => Container(
+                    height: 70,
+                    color: context.colors.red,
+                  ), // todo заменить на компонент
                   separatorBuilder: (context, index) => CustomDivider(),
                 ),
               ],
@@ -73,18 +68,24 @@ class TimetableScreen extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            CustomFloatingActionButton(
-              icon: Icons.arrow_back_sharp,
-              onPressed: _prevDay,
-            ),
-            CustomFloatingActionButton(
-              icon: Icons.arrow_forward_sharp,
-              onPressed: _nextDay,
-            ),
-          ],
+        floatingActionButton: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              CustomFloatingActionButton(
+                icon: Icons.arrow_back_sharp,
+                onPressed: _prevDay,
+              ),
+              CustomFloatingActionButton(
+                icon: Icons.arrow_forward_sharp,
+                onPressed: _nextDay,
+              ),
+            ],
+          ),
         ));
   }
 }
