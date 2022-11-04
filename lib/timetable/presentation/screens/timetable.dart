@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/general/components/buttons/calendar_button.dart';
 import 'package:timetable/general/components/buttons/custom_floating_action_button.dart';
 import 'package:timetable/general/components/custom_app_bar.dart';
 import 'package:timetable/general/components/dividers/custom_divider.dart';
 import 'package:timetable/general/components/tiles/day_tile.dart';
-import 'package:timetable/internal/context_extensions.dart';
+import 'package:timetable/general/components/tiles/lesson_tile.dart';
+import 'package:timetable/timetable/domain/models/lesson_model.dart';
 
 class TimetableScreen extends StatelessWidget {
   const TimetableScreen({Key? key}) : super(key: key);
@@ -51,17 +53,25 @@ class TimetableScreen extends StatelessWidget {
                 ),
                 DayTile(dateTime: DateTime.now()),
                 CustomDivider(),
-                SizedBox(
-                  height: 64,
-                ),
-                ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: 7,
-                  itemBuilder: (BuildContext context, int index) => Container(
-                    height: 70,
-                    color: context.colors.red,
-                  ), // todo заменить на компонент
-                  separatorBuilder: (context, index) => CustomDivider(),
+                Expanded(
+                  child: ScrollConfiguration(
+                    behavior: CupertinoScrollBehavior(),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: 10,
+                      itemBuilder: (BuildContext context, int index) =>
+                          LessonTile(
+                        lessonModel: LessonModel(
+                          time: '10.15-11.50',
+                          subject: 'Математическое моделирование (лк/пр)',
+                          info: 'Богомолов Р.А. / 208 Лен.,57',
+                        ),
+                      ),
+                      controller: ScrollController(),
+                      separatorBuilder: (context, index) => CustomDivider(),
+                      padding: EdgeInsets.symmetric(vertical: 40),
+                    ),
+                  ),
                 ),
               ],
             ),
